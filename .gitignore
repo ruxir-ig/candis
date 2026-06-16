@@ -1,0 +1,33 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# IDE files
+.vscode/
+.idea/
+
+# Challenge Datasets (Too large for Git)
+data/candidates.jsonl
+[PUB] India_runs_data_and_ai_challenge.zip
+
+# Output files
+output/*
+!output/.gitkeep
+
+# Cache files (embeddings, temp data)
+cache/*
+!cache/.gitkeep
+
+# Internal tool folders
+.antigravitycli/
+.gemini/
