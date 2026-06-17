@@ -10,6 +10,7 @@ __pycache__/
 # Virtual environments
 venv/
 .venv/
+.venv-embed/
 env/
 
 # IDE files
@@ -18,7 +19,8 @@ env/
 
 # Challenge Datasets (Too large for Git)
 data/candidates.jsonl
-[PUB] India_runs_data_and_ai_challenge.zip
+data/*.jsonl.gz
+\[PUB\] India_runs_data_and_ai_challenge.zip
 
 # Output files
 output/*

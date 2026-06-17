@@ -1,0 +1,6 @@
+# Offline precompute only (precompute/build_embeddings.py).
+# NOT needed to run the submission — install in a separate venv (see README Setup B).
+# CPU torch: pip install torch --index-url https://download.pytorch.org/whl/cpu
+torch>=2.2
+sentence-transformers>=2.7
+numpy>=1.26
