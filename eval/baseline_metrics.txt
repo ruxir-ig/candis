@@ -1,0 +1,48 @@
+Baseline metrics — frozen before research approaches (new_plan.md)
+==================================================================
+Runtime: 12.9s full / 12.4s no-rerank, CPU-only, no network (under 5-min budget).
+Hard filter: 70 honeypots + 16,151 non-technical careers removed (83,779 scored).
+Python 3.12.13 (uv-managed), numpy 2.4.6.
+
+Scoring formula (challenge): 0.5*ndcg@10 + 0.3*ndcg@50 + 0.15*map + 0.05*p@10
+
+------------------------------------------------------------------
+A. RULE + SEMANTIC  (no LLM rerank)   -- the honest recall baseline
+------------------------------------------------------------------
+  HAND qrel (53 labels, polarized: 21 zeros + 12 fours)  [NON-CIRCULAR]
+    ndcg@10: 0.9661    ndcg@50: 0.9936    map: 1.0000    p@10: 1.0000
+    composite: 0.9811
+  LLM qrel (200 labels: 95 fours, 62 threes, 43 twos)
+    ndcg@10: 1.0000    ndcg@50: 0.9559    map: 0.9318    p@10: 1.0000
+    composite: 0.9765
+
+------------------------------------------------------------------
+B. FULL SYSTEM  (rule + semantic + cached LLM re-rank of top-200)
+------------------------------------------------------------------
+  HAND qrel  [NON-CIRCULAR]
+    ndcg@10: 0.9307    ndcg@50: 0.9880    map: 1.0000    p@10: 1.0000
+    composite: 0.9618
+  LLM qrel  [CIRCULAR: same judge grades qrel and rerank]
+    ndcg@10: 1.0000    ndcg@50: 1.0000    map: 0.9648    p@10: 1.0000
+    composite: 0.9947
+
+Interpretation
+--------------
+* Both qrels are near-saturated at the top, so absolute NDCG movement from new
+  rankers will be small. The real signal for the research approaches is:
+    (a) the LLM-qrel "buried good candidates" list (15+ grade-3/4 at ranks
+        #100-165) — rescuing these is the win condition, and
+    (b) manual top-20/top-100 audit quality + the robustness audit (Day 5).
+* The LLM rerank improves QUALITATIVE top-100 membership (Google/Netflix/Salesforce
+  in; grade-2 services folks out) but is mildly circular vs the LLM qrel and
+  slightly reorders against the hand qrel. Treat rule+semantic (A) as the
+  non-circular baseline to beat.
+* Validation: output/baseline.csv passes validate_submission.py.
+
+Acceptance gates for new rankers (new_plan.md):
+  1. composite improves OR stays within a tiny margin
+  2. top-10 manual quality improves or stays same
+  3. no honeypots/non-technical candidates enter top 100
+  4. runtime < 5 min, CPU-only, no network
+  5. artifacts documented
+Otherwise: ablation-only, not in final.
