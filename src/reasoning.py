@@ -8,6 +8,7 @@ explicitly, and low-ranked candidates lead with their limiting factor.
 from datetime import date, datetime
 
 from .scorers import matched_skill_names, is_services_only
+from .evidence_graph import evidence_phrase
 
 
 def _months_since(d: str, ref: date):
@@ -65,14 +66,20 @@ def build_reasoning(candidate: dict, ref: date, rank: int) -> str:
 
     concerns = _concerns(candidate, ref)
 
+    # Cross-field corroboration evidence (from the evidence graph): one grounded
+    # *why* clause, only for the top of the list where it earns its space.
+    ev = evidence_phrase(candidate)
+
     # Tone matches rank: lower-ranked candidates lead with the limiting factor.
     if rank > 60 and concerns:
         text = f"{concerns[0].capitalize()}; otherwise {strengths.lower()}."
     else:
         text = strengths + "."
-        if avail_phrase:
+        if ev and len(text) + len(ev) + 2 <= 238:
+            text += f" {ev}."
+        if avail_phrase and len(text) + len(avail_phrase) + 2 <= 238:
             text += f" {avail_phrase.capitalize()}."
-        if concerns:
+        if concerns and len(text) + 12 <= 238:
             text += f" Concern: {concerns[0]}."
 
     return text[:240]
