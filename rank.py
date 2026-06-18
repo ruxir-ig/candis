@@ -19,6 +19,7 @@ sys.path.insert(0, str(ROOT))
 from src.loader import load_candidates  # noqa: E402
 from src.ranker import score_all  # noqa: E402
 from src.reasoning import build_reasoning  # noqa: E402
+from src.llm_reranker import apply_rerank, load_grades  # noqa: E402
 
 TOP_N = 100
 HEADER = ["candidate_id", "rank", "score", "reasoning"]
@@ -29,6 +30,10 @@ def main():
     ap.add_argument("--candidates", default="data/candidates.jsonl")
     ap.add_argument("--out", default="output/submission.csv")
     ap.add_argument("--top", type=int, default=TOP_N)
+    ap.add_argument("--rerank-window", type=int, default=200,
+                    help="LLM re-ranks the top-N of the ensemble (cached, offline)")
+    ap.add_argument("--no-rerank", action="store_true",
+                    help="disable LLM re-rank even if a cache is present")
     args = ap.parse_args()
 
     t0 = time.time()
@@ -38,6 +43,17 @@ def main():
 
     scored, ref = score_all(candidates)
     print(f"  scored {len(scored):,} (honeypots dropped); reference date = {ref}")
+
+    # Optional final stage: LLM re-rank of the top window (cached, no network).
+    if not args.no_rerank:
+        grades = load_grades()
+        if grades:
+            before = scored[: args.rerank_window]
+            scored = apply_rerank(scored, window=args.rerank_window, grades=grades)
+            after = scored[: args.rerank_window]
+            moved = sum(1 for a, b in zip(before, after) if a["candidate_id"] != b["candidate_id"])
+            print(f"  LLM re-rank applied: {len(grades)} grades cached, "
+                  f"{moved}/{len(before)} of top-{args.rerank_window} re-ordered")
 
     top = scored[: args.top]
     out_path = Path(args.out)

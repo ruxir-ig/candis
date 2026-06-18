@@ -29,6 +29,11 @@ output/*
 # Cache files (embeddings, temp data)
 cache/*
 !cache/.gitkeep
+# ...but commit the small offline LLM judgment caches, so the LLM re-rank is
+# reproducible without re-running (and re-paying for) the LLM judge. The big
+# embeddings cache and the API-key env file stay ignored.
+!cache/llm_rerank.jsonl
+!cache/llm_labels.jsonl
 
 # Internal tool folders
 .antigravitycli/
