@@ -40,9 +40,9 @@ def main():
                          "(experimental; off by default — see eval/ablation_fusion.py)")
     ap.add_argument("--sparse-weight", type=float, default=1.0,
                     help="RRF vote weight for the BM25 ranker (down-weight=weak signal)")
-    ap.add_argument("--use-expansion", action="store_true",
-                    help="promote evidence-guided buried stars into ranks 21-100 "
-                         "(two-gate policy, top-20 frozen; see src/llm_expansion.py)")
+    ap.add_argument("--no-expansion", action="store_true",
+                    help="disable the evidence-guided LLM expansion pass "
+                         "(on by default if cache/llm_expansion.jsonl exists)")
     args = ap.parse_args()
 
     t0 = time.time()
@@ -80,7 +80,10 @@ def main():
             print(f"  LLM re-rank applied: {len(grades)} grades cached, "
                   f"{moved}/{len(before)} of top-{args.rerank_window} re-ordered")
 
-    if args.use_expansion:
+    # Evidence-guided expansion promotion (default ON; top-20 frozen, two-gate policy).
+    # Promotes manually-audited, high-confidence grade-4 candidates from ranks
+    # 201-800 into ranks 21-100. Disable with --no-expansion for the base baseline.
+    if not args.no_expansion:
         exp = load_expansion_grades()
         if exp:
             import json as _j
