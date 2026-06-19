@@ -187,6 +187,26 @@ and a honeypot/trap audit view.
 
 ---
 
+## Reproducibility checklist
+
+Tested from a clean checkout with Python 3.12 + uv.
+
+- **Runtime ranking step** (`rank.py`): stdlib + numpy only. No network, no GPU,
+  no torch/sklearn/scipy. ~13–25s on the full 100K pool.
+- **Offline caches** (precomputed, not recomputed at ranking time):
+  - `cache/embeddings.npz` — MiniLM embeddings. **Not committed** (136 MB);
+    regenerate via Setup B. Without it the ranker falls back to rule-only weights.
+  - `cache/llm_rerank.jsonl`, `cache/llm_expansion.jsonl` — LLM judge grades.
+    **Committed** (small); the re-rank + expansion are reproducible without an
+    API key.
+- **No absolute paths** in source (all paths are `Path(__file__).resolve()`).
+- **No API keys** needed at ranking time (all LLM work is cached offline).
+- **Graceful degradation**: missing embeddings → rule-only; missing LLM grades →
+  no re-rank; missing expansion → no promotion. Each stage is independent.
+- **Final top-100 audit**: `docs/final_top100_audit.md` — zero red flags.
+
+---
+
 ## Reproduce the submission in one command
 
 By default, the final ranker also applies a cached **evidence-guided LLM expansion**
