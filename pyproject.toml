@@ -12,6 +12,11 @@ ltr = [
     "pandas>=3.0.3",
     "scikit-learn>=1.9.0",
 ]
+graph = [
+    "networkx>=3.6.1",
+    "node2vec>=0.4.3",
+    "setuptools<80",
+]
 
 [dependency-groups]
 dev = [
