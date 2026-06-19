@@ -39,3 +39,7 @@ cache/*
 # Internal tool folders
 .antigravitycli/
 .gemini/
+
+# scratch planning files
+loop_*.md
+looping_plan.md
