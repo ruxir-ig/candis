@@ -1,6 +1,6 @@
 # Research Looping Plan — India Runs / Redrob Candidate Ranking
 
-**Current loop number:** `2`
+**Current loop number:** `3`
 **Current date:** 19 June 2026  
 **Submission deadline:** 2 July 2026, 23:59 IST  
 **Project status:** Final submission is currently frozen, validated, audited, and ready. Future work must happen in controlled research loops and must not destabilize the current final output.
