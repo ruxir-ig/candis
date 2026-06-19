@@ -213,10 +213,40 @@ Question:
 
 ## Results
 
-Not run yet.
+- 49/49 pairwise comparisons completed.
+- Entrants won 41/49 = 83.7%.
+- All responses valid JSON.
+- All high confidence.
+- 0 ties, 0 errors.
+- 4/7 entrants swept all leavers (7-0).
+- 2/7 leavers never won a single comparison.
 
----
+## Yellow flags
 
-## Final decision
+- CAND_0047721 (Microsoft Senior DS, IIT, LTR/Qdrant/FAISS, assessment IR=87.8, pointwise fit 9.8) lost 4/7. Losses are preference-style ("opponent's profile more explicitly describes shipping search/ranking systems"), not disqualification-style. Remains manually acceptable.
+- CAND_0018722 (Saarthi.ai RecSys Engineer, 6.6y, career: Saarthi → Unacademy → Swiggy) won 3/7 — strong product-company career. Below the "beats most entrants" threshold (3/7 < 4/7). Added to watchlist for future wider expansion window.
 
-Pending.
+## Metrics
+
+- Entrant win rate: 83.7% (threshold: ≥70% → strongly validated)
+- Verdict: STRONGLY VALIDATED
+
+## Entrants/leavers if ranking changed
+
+No ranking change. Final submission unchanged.
+
+## Manual audit summary
+
+Reviewed all 8 leaver-win pairs. The pairwise judge consistently preferred candidates whose profiles more explicitly describe "shipping end-to-end search and ranking systems." Two affected entrants (CAND_0047721, CAND_0099401) have strong credentials but more recommendation-systems-focused role descriptions. All losses are close-call fit judgments between two grade-4 candidates.
+
+## Decision
+
+**AUDIT-ONLY. No ranking change. Expansion remains validated.**
+
+Pi-agent reviewed and approved this decision. No swap of CAND_0047721 or CAND_0018722.
+
+## Next recommended loop
+
+**Loop 2: Role-Aware Expert Mixture** (pi-agent recommendation)
+
+Build expert scores for IR/search, RecSys/ranking, NLP/LLM, production ML, product seniority, availability, and anti-gaming skepticism. Evaluate whether expert mixture can identify high-quality candidates missed by the current ranker. Likely use: audit-only or future expansion selector.
