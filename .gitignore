@@ -34,6 +34,7 @@ cache/*
 # embeddings cache and the API-key env file stay ignored.
 !cache/llm_rerank.jsonl
 !cache/llm_labels.jsonl
+!cache/llm_expansion.jsonl
 
 # Internal tool folders
 .antigravitycli/

@@ -164,12 +164,13 @@ SLIDES = [
         "items": [
             ("label", "Top-10 — all Senior/Staff ML at top product companies:"),
             ("normal", "Paytm · Razorpay · Apple · Zomato · Microsoft · Netflix · Niramai · Yellow.ai · Flipkart"),
+            ("label", "Evidence-guided expansion recovered 7 buried stars (ranks 203-440):"),
+            ("normal", "Microsoft · Amazon (x2) · Meta · Dream11 · Freshworks — promoted to ranks 46-52"),
+            ("normal", "All grade-4, fit 9.8, high confidence, zero concerns; top-20 frozen; 7 weakest displaced"),
             ("label", "Top-100 composition:"),
-            ("normal", "CRED (6), Rephrase.ai (6), Netflix (5), Sarvam AI (5), Google (4), Meta (4), LinkedIn (4)"),
-            ("normal", "Titles: ML/AI (40), Senior (20), RecSys (19), Search/IR (11), Staff/Lead (6)"),
-            ("label", "Quality metrics:"),
-            ("normal", "Hand-qrel (non-circular) NDCG@10 = 0.97 · LLM-qrel NDCG@10 = 1.00 · MAP = 1.00"),
-            ("normal", "0 honeypots, 0 non-technical careers in the top-100 (hard-filter guarantee)"),
+            ("normal", "CRED (6), Netflix (5), Sarvam AI (5), Google (4), Meta (4), Amazon (3), Microsoft (3)"),
+            ("label", "Quality metrics (hand qrel, non-circular):"),
+            ("normal", "NDCG@10 = 0.93 · MAP = 1.00 · P@10 = 1.00 · 0 honeypots/stuffers in top-100"),
         ],
     },
     {

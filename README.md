@@ -189,10 +189,16 @@ and a honeypot/trap audit view.
 
 ## Reproduce the submission in one command
 
+By default, the final ranker also applies a cached **evidence-guided LLM expansion**
+pass: it grades a diverse, evidence-rich slice of ranks 201-800 with the same
+judge, then promotes only manually-audited, high-confidence grade-4 candidates
+into ranks 21-100 (top-20 frozen). This recovered 7 Senior/Staff ML engineers
+at Microsoft, Amazon, and Meta. Disable with `--no-expansion`.
+
 ```bash
 uv run python rank.py --candidates data/candidates.jsonl --out output/submission.csv
 ```
 (With `cache/embeddings.npz` + `cache/llm_rerank.jsonl` present this runs the full
-hybrid + LLM re-rank pipeline; without caches it degrades gracefully.) The
-offline LLM label caches are committed so the re-rank is reproducible without an
-API key; the embedding cache is regenerable via Setup B.
+hybrid + LLM re-rank + expansion pipeline; without caches it degrades gracefully.)
+The offline LLM label caches are committed so the re-rank is reproducible without
+an API key; the embedding cache is regenerable via Setup B.
