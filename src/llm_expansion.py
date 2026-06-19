@@ -147,7 +147,10 @@ def apply_expansion(scored, base_grades, exp_grades, evidence_fn,
     keep_n = 100 - FROZEN_TOP
     new_mid = merged[:keep_n]
     displaced = merged[keep_n:]
-    tail = scored[100:]
+    # Promoted candidates originally came from the tail; remove their original
+    # copies so full-list audits do not see duplicate candidate IDs. Top-100
+    # order is unaffected because promotions are already in new_mid.
+    tail = [r for r in scored[100:] if r["candidate_id"] not in promotions]
 
     # new ordering: head + new_mid + displaced + tail
     new_order_ids = ([r["candidate_id"] for r in head]
