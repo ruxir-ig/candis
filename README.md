@@ -1,4 +1,4 @@
-# Intelligent Candidate Discovery & Ranking
+# CanDis - Intelligent Candidate Discovery & Ranking
 
 A capability-matching pipeline for the Redrob *Intelligent Candidate Discovery &
 Ranking Challenge*: rank the top 100 candidates for a Senior AI/ML Engineer role
