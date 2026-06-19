@@ -20,6 +20,7 @@ from src.loader import load_candidates  # noqa: E402
 from src.ranker import score_all, load_sparse_scores, apply_rrf  # noqa: E402
 from src.reasoning import build_reasoning  # noqa: E402
 from src.llm_reranker import apply_rerank, load_grades  # noqa: E402
+from src.llm_expansion import load_expansion_grades, apply_expansion  # noqa: E402
 
 TOP_N = 100
 HEADER = ["candidate_id", "rank", "score", "reasoning"]
@@ -39,6 +40,9 @@ def main():
                          "(experimental; off by default — see eval/ablation_fusion.py)")
     ap.add_argument("--sparse-weight", type=float, default=1.0,
                     help="RRF vote weight for the BM25 ranker (down-weight=weak signal)")
+    ap.add_argument("--use-expansion", action="store_true",
+                    help="promote evidence-guided buried stars into ranks 21-100 "
+                         "(two-gate policy, top-20 frozen; see src/llm_expansion.py)")
     args = ap.parse_args()
 
     t0 = time.time()
@@ -75,6 +79,28 @@ def main():
             moved = sum(1 for a, b in zip(before, after) if a["candidate_id"] != b["candidate_id"])
             print(f"  LLM re-rank applied: {len(grades)} grades cached, "
                   f"{moved}/{len(before)} of top-{args.rerank_window} re-ordered")
+
+    if args.use_expansion:
+        exp = load_expansion_grades()
+        if exp:
+            import json as _j
+            from src.evidence_graph import evidence_graph_score
+            ev_map = {r["candidate_id"]: evidence_graph_score(r["candidate"])["score"]
+                      for r in scored}
+            base_full = {}
+            for line in open(ROOT / "cache" / "llm_rerank.jsonl", encoding="utf-8"):
+                try:
+                    d = _j.loads(line)
+                    if d.get("fit_score") is not None:
+                        base_full[d["candidate_id"]] = d
+                except _j.JSONDecodeError:
+                    continue
+            scored, audit = apply_expansion(
+                scored, base_full, exp, lambda cid: ev_map.get(cid, 0.0))
+            print(f"  Expansion: {len(audit['entered'])} promoted, "
+                  f"{len(audit['left'])} displaced (top-20 frozen)")
+        else:
+            print("  Expansion: no cache found")
 
     top = scored[: args.top]
     out_path = Path(args.out)
