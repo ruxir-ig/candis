@@ -93,12 +93,10 @@ SLIDES = [
         "right_title": "Availability = multiplier, not additive",
         "right": [
             "final = fit × (0.65 + 0.35 × availability)",
-            "Behavior can dampen a good fit…",
-            "…but can NEVER rescue a bad one (per the JD).",
+            "Dampens unreachable candidates…",
+            "…but can NEVER rescue a bad fit (per JD).",
             "Floor 0.65: a 120-day-notice candidate is",
-            "“moderately reachable”, not “unavailable”.",
-            "This keeps genuinely strong but slow-notice",
-            "candidates from being buried.",
+            "“moderately reachable”, not buried.",
         ],
     },
     {
@@ -200,6 +198,21 @@ SLIDES = [
             ("label", "Learned rankers need a larger, de-saturated label set:"),
             ("normal", "219 labels (mostly top-200) → LTR/GNN overfit. A stratified sample across the full fit range would help."),
             ("label", "Deferred: 4-agent recruiter panel (API-quota-constrained under the free tier)"),
+        ],
+    },
+    {
+        "kind": "bullets",
+        "title": "Why This Wins",
+        "accent": True,
+        "items": [
+            ("big", "Not keyword matching:  15 vs 0  stuffed profiles in the top-100"),
+            ("normal", "Structural defenses (title anchor + trust-weighted skills + coarse filter) make stuffing useless."),
+            ("big", "Recruiter-style evidence, not raw skill counts"),
+            ("normal", "7 corroboration categories + LLM cross-encoder judgment + evidence-guided expansion."),
+            ("big", "Research-backed, evidence-based selection"),
+            ("normal", "5 rankers tested (BM25, evidence graph, LTR, GNN, LLM), 1 adopted — every decision documented."),
+            ("big", "Fast, offline, validated"),
+            ("normal", "13s · CPU-only · numpy-only · no network · hand-qrel MAP = 1.0 · 0 red flags in top-100"),
         ],
     },
 ]
