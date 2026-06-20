@@ -1,5 +1,6 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
+.pytest_cache/
 *.pyc
 *.pyo
 *.pyd
@@ -20,11 +21,14 @@ env/
 # Challenge Datasets (Too large for Git)
 data/candidates.jsonl
 data/*.jsonl.gz
+*.zip
 \[PUB\] India_runs_data_and_ai_challenge.zip
 
 # Output files
 output/*
 !output/.gitkeep
+*.pdf
+*.pptx
 
 # Cache files (embeddings, temp data)
 cache/*
@@ -43,3 +47,6 @@ cache/*
 # scratch planning files
 loop_*.md
 looping_plan.md
+new_plan.md
+explain.html
+docs/*.docx

@@ -150,8 +150,7 @@ The hard filters are *guarantees*, not soft preferences:
 
 These two stages together mean the soft scorers below them can *never* surface
 a trap candidate into the top-100, regardless of how the skills/semantic scores
-get gamed. The audit view in the sandbox verifies the top-100 contains zero of
-each.
+get gamed. The final top-100 audit verifies the top-100 contains zero of each.
 
 ---
 
@@ -159,11 +158,9 @@ each.
 
 There is no live leaderboard, so we manufacture our own small qrel:
 
-1. `eval/build_golden_set.py` samples ~55 stratified candidates (current top,
-   trap suspects, semantic discoveries, honeypots, randoms).
-2. A human reads each like a recruiter and grades 0–4 into
+1. A human reads a stratified sample like a recruiter and grades 0–4 into
    `eval/golden_labels.csv`.
-3. `eval/evaluate.py` scores the full pool, restricts the ordering to the
+2. `eval/evaluate.py` scores the full pool, restricts the ordering to the
    labeled set, and reports NDCG@10/@50, MAP, P@10 and the composite the
    challenge uses (`0.5·NDCG@10 + 0.3·NDCG@50 + 0.15·MAP + 0.05·P@10`).
 

@@ -11,8 +11,8 @@ rule+semantic ensemble:
   4. drop behavioral    remove all redrob_signals (ranking should barely move)
   5. title inflation    relabel a weak profile "Senior AI Engineer"
 
-The hero number for the deck is test 1: how many stuffed weak profiles breach
-the top-100 / top-500 under each ranker.
+The headline number is test 1: how many stuffed weak profiles breach the
+top-100 / top-500 under each ranker.
 
 Writes a markdown report to docs/robustness_audit.md.
 

@@ -1,3 +1,0 @@
-# Runtime: everything rank.py and the eval harness need.
-# Deliberately minimal — the ranking step is stdlib + numpy only (CPU, no network).
-numpy>=1.26

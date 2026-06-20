@@ -22,7 +22,7 @@ isn't penalised to zero, just weakly corroborated):
   8. anti_stuffing             — contradiction penalty (multiplier, not additive)
 
 Output per candidate: {score, components, positive[], negative[]} — the evidence
-strings feed the reasoning column and the deck.
+strings feed the reasoning column.
 """
 from __future__ import annotations
 

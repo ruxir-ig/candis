@@ -17,7 +17,7 @@ ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT))
 
 from src.loader import load_candidates  # noqa: E402
-from src.ranker import score_all, load_sparse_scores, apply_rrf  # noqa: E402
+from src.ranker import score_all  # noqa: E402
 from src.reasoning import build_reasoning  # noqa: E402
 from src.llm_reranker import apply_rerank, load_grades  # noqa: E402
 from src.llm_expansion import load_expansion_grades, apply_expansion  # noqa: E402
@@ -35,11 +35,6 @@ def main():
                     help="LLM re-ranks the top-N of the ensemble (cached, offline)")
     ap.add_argument("--no-rerank", action="store_true",
                     help="disable LLM re-rank even if a cache is present")
-    ap.add_argument("--rrf", action="store_true",
-                    help="fuse the ensemble with BM25 via Reciprocal Rank Fusion "
-                         "(experimental; off by default — see eval/ablation_fusion.py)")
-    ap.add_argument("--sparse-weight", type=float, default=1.0,
-                    help="RRF vote weight for the BM25 ranker (down-weight=weak signal)")
     ap.add_argument("--no-expansion", action="store_true",
                     help="disable the evidence-guided LLM expansion pass "
                          "(on by default if cache/llm_expansion.jsonl exists)")
@@ -52,22 +47,6 @@ def main():
 
     scored, ref = score_all(candidates)
     print(f"  scored {len(scored):,} (honeypots dropped); reference date = {ref}")
-
-    # Optional: fuse the ensemble ranking with BM25 via Reciprocal Rank Fusion.
-    # Off by default — the ablation showed BM25's lexical signal is noisier than
-    # our dense semantic + structured title enum, so it hurts NDCG (see
-    # docs/ablation_rrf_bm25.md). Kept for experimentation / the deck.
-    if args.rrf:
-        sparse = load_sparse_scores()
-        if sparse:
-            before_top = {r["candidate_id"] for r in scored[:100]}
-            scored = apply_rrf(scored, sparse, sparse_weight=args.sparse_weight)
-            after_top = {r["candidate_id"] for r in scored[:100]}
-            swapped = len(before_top ^ after_top) // 2
-            print(f"  RRF fusion applied (BM25, w={args.sparse_weight}): "
-                  f"{swapped} top-100 seats changed hands")
-        else:
-            print("  RRF: no sparse cache found — using ensemble order")
 
     # Optional final stage: LLM re-rank of the top window (cached, no network).
     if not args.no_rerank:

@@ -48,6 +48,7 @@ src/
   config.py                 All weights & thresholds
   ranker.py                 Ensemble: fit × availability → ranking
   llm_reranker.py           Cached pointwise LLM re-rank of top-200
+  llm_expansion.py          Cached evidence-guided promotion pass
   semantic_matcher.py       Cached-embedding cosine scoring (numpy only)
   evidence_graph.py         7-category cross-field corroboration scorer
   reasoning.py              Grounded, honest per-candidate reasoning
@@ -55,12 +56,10 @@ src/
                             location, behavioral scorers
   honeypot_detector.py      Stage 1: logical-impossibility detection
   coarse_filter.py          Stage 2: hard non-technical-career safety net
-precompute/                 Offline cache builders (embeddings, LLM labels,
-                            experimental rankers, deck)
-eval/                       Metrics (NDCG/MAP/P@k), evaluation, robustness audits
-docs/                       Full ablation write-ups + audit reports
-output/submission.csv       The ranked top-100
-output/deck.pdf             Submission deck (12 slides)
+precompute/                 Offline cache builders for embeddings and LLM labels
+eval/                       Metrics, evaluation, robustness and top-100 audits
+docs/                       Final approach, robustness, and top-100 audit notes
+output/                     Generated artifacts; kept out of git except .gitkeep
 ```
 
 ---

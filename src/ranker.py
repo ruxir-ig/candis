@@ -21,7 +21,6 @@ from .scorers import (
 from .semantic_matcher import semantic_scores
 
 ROOT = Path(__file__).resolve().parent.parent
-SPARSE_CACHE = ROOT / "cache" / "sparse_scores.npz"
 
 
 def reference_date(candidates) -> date:
@@ -96,41 +95,3 @@ def score_all(candidates, ref: date = None, drop_honeypots: bool = DROP_HONEYPOT
     scored.sort(key=lambda r: (-r["score"], r["candidate_id"]))
     return scored, ref
 
-
-def load_sparse_scores():
-    """Load cached BM25 sparse scores. None if the cache is absent (so the
-    runtime falls back to the weighted-fit ensemble alone)."""
-    if not SPARSE_CACHE.exists():
-        return None
-    import numpy as np
-    d = np.load(SPARSE_CACHE, allow_pickle=True)
-    return {str(cid): float(s) for cid, s in zip(d["candidate_ids"], d["scores"])}
-
-
-def apply_rrf(scored: list, sparse_scores: dict, k: int = 60,
-              sparse_weight: float = 1.0) -> list:
-    """Re-order `scored` (the weighted-fit+availability ranking) by Reciprocal
-    Rank Fusion with the BM25 sparse ranking.
-
-    Rank list A = the ensemble order (already sorted by final score).
-    Rank list B = BM25 order. The fused RRF score replaces each row's `score`
-    so downstream stages (LLM re-rank, CSV writer) see the fused ordering. The
-    rich per-candidate dicts (components, fit, candidate) are preserved.
-
-    `sparse_weight` down-weights BM25's vote without dropping it — useful if BM25
-    proves noisy (the plan's "use BM25 only as a weak ranker in RRF" lever).
-    """
-    from .fusion import reciprocal_rank_fusion
-    list_a = [r["candidate_id"] for r in scored]
-    list_b = [cid for cid, _ in sorted(sparse_scores.items(),
-                                       key=lambda kv: (-kv[1], kv[0]))]
-    rrf, order = reciprocal_rank_fusion(
-        [("ensemble", list_a), ("sparse", list_b)],
-        k=k, weights={"sparse": sparse_weight})
-    by_id = {r["candidate_id"]: r for r in scored}
-    out = []
-    for cid in order:
-        r = dict(by_id[cid])
-        r["score"] = round(float(rrf[cid]), 6)
-        out.append(r)
-    return out
