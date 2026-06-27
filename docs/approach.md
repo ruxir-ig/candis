@@ -164,15 +164,32 @@ There is no live leaderboard, so we manufacture our own small qrel:
    labeled set, and reports NDCG@10/@50, MAP, P@10 and the composite the
    challenge uses (`0.5·NDCG@10 + 0.3·NDCG@50 + 0.15·MAP + 0.05·P@10`).
 
-**Current results (53 labels, hybrid mode):**
+**Primary evaluation (200 LLM labels, de-polarized qrel):**
+
+This is the more discriminating evaluation set because it contains many grade-2
+and grade-3 borderline candidates, not just obvious stars/traps.
 
 | metric | value |
 |---|---|
-| NDCG@10 | 0.9661 |
-| NDCG@50 | 0.9936 |
+| NDCG@10 | 1.0000 |
+| NDCG@50 | 1.0000 |
+| MAP | 0.9648 |
+| P@10 | 1.0000 |
+| **composite** | **0.9947** |
+
+**Hand-label sanity check (53 labels, polarized qrel):**
+
+| metric | value |
+|---|---|
+| NDCG@10 | 0.9307 |
+| NDCG@50 | 0.9880 |
 | MAP | 1.0000 |
 | P@10 | 1.0000 |
-| **composite** | **0.9811** |
+| **composite** | **0.9618** |
+
+**LLM judge probe:** before trusting cached grades, `precompute/llm_probe.py`
+was run against the hand labels using `meta/llama-3.3-70b-instruct` via NVIDIA
+NIM. Result: 7/9 exact agreement and 8/9 within one grade.
 
 ### Honest caveats
 - **It's a proxy, not a prediction.** The golden set is small and somewhat

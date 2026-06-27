@@ -8,10 +8,13 @@ layer, vLLM, LM Studio, and Ollama (`/v1/...` alias). So one client covers
 every backend we might use.
 
 Configure via env (no code changes to switch backend):
-    LLM_BASE_URL   e.g. https://api.groq.com/openai/v1   (default: ollama)
-    LLM_API_KEY    key, or "ollama" for local            (default: ollama)
-    LLM_MODEL      e.g. llama-3.3-70b-versatile          (default: qwen3-vl:latest)
+    LLM_BASE_URL   e.g. https://integrate.api.nvidia.com/v1
+    LLM_API_KEY    provider API key
+    LLM_MODEL      e.g. meta/llama-3.3-70b-instruct
     LLM_TIMEOUT_S  per-call timeout                       (default: 180)
+
+There is deliberately no implicit local-model default. The LLM judge is a high
+leverage offline precompute step, so callers must choose the backend explicitly.
 """
 from __future__ import annotations
 
@@ -19,9 +22,9 @@ import json
 import os
 import urllib.request
 
-DEFAULT_BASE = os.environ.get("LLM_BASE_URL", "http://localhost:11434/v1")
-DEFAULT_KEY = os.environ.get("LLM_API_KEY", "ollama")
-DEFAULT_MODEL = os.environ.get("LLM_MODEL", "qwen3-vl:latest")
+DEFAULT_BASE = os.environ.get("LLM_BASE_URL")
+DEFAULT_KEY = os.environ.get("LLM_API_KEY")
+DEFAULT_MODEL = os.environ.get("LLM_MODEL")
 DEFAULT_TIMEOUT = int(os.environ.get("LLM_TIMEOUT_S", "180"))
 
 
@@ -46,6 +49,11 @@ def chat(
     (supported by OpenAI, Groq, Together, Gemini-compat). Falls through
     silently for backends that ignore it.
     """
+    if not base_url or not api_key or not model:
+        raise LLMError(
+            "LLM_BASE_URL, LLM_API_KEY, and LLM_MODEL must be set for offline "
+            "LLM precompute. Ranking itself does not need these env vars."
+        )
     body = {
         "model": model,
         "messages": messages,
@@ -81,5 +89,5 @@ def chat(
 def config_summary() -> str:
     """One-line description of the active backend, for logging."""
     key = DEFAULT_KEY
-    masked = key[:3] + "***" if key and key != "ollama" else key
+    masked = key[:3] + "***" if key else "<unset>"
     return f"model={DEFAULT_MODEL} base={DEFAULT_BASE} key={masked}"

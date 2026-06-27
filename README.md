@@ -34,9 +34,10 @@ Ranking must run **≤5 min, ≤16 GB, CPU-only, no network**.
 
 ```bash
 uv run python rank.py --candidates data/candidates.jsonl --out output/submission.csv
+uv run python rank.py --candidates data/candidates.jsonl --out output/submission.xlsx
 ```
 
-Installation: Python 3.12 + [`uv`](https://docs.astral.sh/uv/). All LLM grades are committed; no API key needed at ranking time.
+Use CSV for local validation and XLSX for the challenge upload form. Installation: Python 3.12 + [`uv`](https://docs.astral.sh/uv/). All LLM grades are committed; no API key needed at ranking time.
 
 ---
 
@@ -59,7 +60,7 @@ src/
 precompute/                 Offline cache builders for embeddings and LLM labels
 eval/                       Metrics, evaluation, robustness and top-100 audits
 docs/                       Final approach, robustness, and top-100 audit notes
-output/                     Generated artifacts; kept out of git except .gitkeep
+output/                     Generated CSV/XLSX artifacts; kept out of git except .gitkeep
 ```
 
 ---
